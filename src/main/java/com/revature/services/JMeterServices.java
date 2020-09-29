@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.templates.LoadTestConfig;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.protocol.http.sampler.HTTPSampler;
@@ -10,35 +11,48 @@ import org.apache.jmeter.util.JMeterUtils;
 import org.apache.jorphan.collections.HashTree;
 
 public class JMeterServices {
-    StandardJMeterEngine jm = new StandardJMeterEngine();
 
-    TestPlan testPlan = new TestPlan("MY TEST PLAN");
+    public void loadTesting(String openAPI, LoadTestConfig ltg) {
+        StandardJMeterEngine jm = new StandardJMeterEngine();
 
-    public HTTPSampler getHttpSampler(String domain, int port, String path, String method) {
+        // WHERE IS THIS FILE?
+        JMeterUtils.loadJMeterProperties("../jmeter.properties");
+        JMeterUtils.initLogging();
+        JMeterUtils.initLocale();
+
+//        LOOP FOR ALL HTTP REQUESTS
+//        Replace w/ info from OPENAPI
         HTTPSampler httpSampler = new HTTPSampler();
-        httpSampler.setDomain(domain);
-        httpSampler.setPort(port);
-        httpSampler.setPath(path);
-        httpSampler.setMethod(method);
-        return httpSampler;
-    }
+        httpSampler.setDomain("www.google.com");
+        httpSampler.setPort(8080);
+        httpSampler.setPath("path");
+        httpSampler.setMethod("method");
 
-    HashTree hashTree = new HashTree();
-
-    public TestElement getTestElement(int loops, HTTPSampler httpSampler) {
+//        OR use time duration
         TestElement loopCtrl = new LoopController();
-        ((LoopController) loopCtrl).setLoops(loops);
-        ((LoopController) loopCtrl).addTestElement(httpSampler);
-        ((LoopController) loopCtrl).setFirst(true);
-        return loopCtrl;
-    }
+        if (ltg.loops != 0) {
+            ((LoopController) loopCtrl).setLoops(ltg.loops);
+            ((LoopController) loopCtrl).addTestElement(httpSampler);
+            ((LoopController) loopCtrl).setFirst(true);
+        }
 
-    public SetupThreadGroup getThreadGroup(int threads, int rampUp, TestElement loopCtrl) {
         SetupThreadGroup threadGroup = new SetupThreadGroup();
-        threadGroup.setNumThreads(threads);
-        threadGroup.setRampUp(rampUp);
-        threadGroup.setSamplerController((LoopController) loopCtrl);// this or time duration
-        return threadGroup;
-    }
+        threadGroup.setNumThreads(ltg.threads);
+        threadGroup.setRampUp(ltg.rampUp);
+        threadGroup.setSamplerController((LoopController) loopCtrl);
 
+        TestPlan testPlan = new TestPlan("MY TEST PLAN");
+
+        HashTree hashTree = new HashTree();
+        hashTree.add("testPlan", testPlan);
+        hashTree.add("loopCtrl", loopCtrl);
+        hashTree.add("threadGroup", threadGroup);
+        hashTree.add("httpSampler", httpSampler);
+
+        jm.configure(hashTree);
+
+        // ResultCollector class tracks results
+
+        jm.run();
+    }
 }
