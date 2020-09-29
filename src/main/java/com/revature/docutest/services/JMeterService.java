@@ -1,30 +1,80 @@
 package com.revature.docutest.services;
 
+import io.swagger.models.Swagger;
+import io.swagger.v3.oas.models.OpenAPI;
 import org.apache.jmeter.control.LoopController;
 import org.apache.jmeter.engine.StandardJMeterEngine;
 import org.apache.jmeter.protocol.http.sampler.HTTPSampler;
 import org.apache.jmeter.reporters.Summariser;
 import org.apache.jmeter.testelement.TestElement;
 import org.apache.jmeter.testelement.TestPlan;
+import org.apache.jmeter.threads.SetupThreadGroup;
 import org.apache.jorphan.collections.HashTree;
-
-import io.swagger.models.Swagger;
-import io.swagger.v3.oas.models.OpenAPI;
 
 public class JMeterService {
     
-    public HTTPSampler createHTTPSampler(Swagger input) {
+    /**
+     * For OAS 2.0. Parses HTTP request conditions from swagger file and generates an array of HTTPSampler objects based on
+     * host, basepath, paths, endpoints, and HTTP verbs
+     * @param input Swagger/OpenAPIv2 file input
+     * @return HTTPSampler object array
+     */
+    public HTTPSampler[] createHTTPSampler(Swagger input) {
         // TODO implement
+        
     }
     
-    public TestElement createLoopController(/* params? */) {
+    /**
+     * For OAS 3.0. Parses HTTP request conditions from swagger file and generates an array of HTTPSampler objects based on
+     * Server array
+     * @param input Swagger/OpenAPIv2 file input
+     * @return HTTPSampler object array
+     */
+    public HTTPSampler[] createHTTPSampler(OpenAPI input) {
         // TODO implement
+        
     }
     
-    public ThreadGroup createThreadGroup(Swagger input) {
+    /**
+     * 
+     * @param httpSamplers
+     * @param n Number of iterations (I think?)
+     * @return Array of LoopController objects based on the httpSamplers
+     * http://svn.apache.org/repos/asf/jmeter/tags/v2_3_2/docs/api/org/apache/jmeter/control/LoopController.html
+     */
+    public TestElement createLoopController(HTTPSampler[] httpSamplers, int n /* other params? */) {
         // TODO implement
+        
+        // TODO null checks
+        
+        TestElement ret = new LoopController();
+        ((LoopController) ret).setLoops(n);
+        
+        for (HTTPSampler httpSample : httpSamplers) {
+            
+            // init loop controller
+            ret.addTestElement(httpSample);
+            
+        }
+        
+        return ret;
     }
     
+    public ThreadGroup createThreadGroup(TestElement loopControllers) {
+        // TODO implement
+        SetupThreadGroup threadGroup = new SetupThreadGroup();
+        
+        threadGroup.setSamplerController(c);
+    }
+    
+    /**
+     * 
+     * @param testPlanName
+     * @param httpSampler
+     * @param loopController
+     * @param threadGroup
+     * @return hashtree for use with StandardJMeterEngine
+     */
     public HashTree createTestConfig(String testPlanName, HTTPSampler httpSampler, LoopController loopController, ThreadGroup threadGroup) {
         // init hashtree
         HashTree jmConfig = new HashTree();
@@ -42,6 +92,10 @@ public class JMeterService {
     public void runTest(HashTree testConfig) {
         StandardJMeterEngine jmRunner = new StandardJMeterEngine();
         jmRunner.configure(testConfig);
+        
+        String summaryName = "";
+        Summariser summary = new Summariser(summaryName);
+        
     }
 
 }
