@@ -27,7 +27,7 @@ class JMeterServiceTest {
     }
 
     @Test
-    void test() {
+    void testCreateHttpSampler() {
         fail("Not yet implemented");
     }
 

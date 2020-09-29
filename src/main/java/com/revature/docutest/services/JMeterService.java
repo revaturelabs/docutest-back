@@ -60,12 +60,26 @@ public class JMeterService {
         return ret;
     }
     
-    public ThreadGroup createThreadGroup(TestElement loopControllers) {
+    /**
+     * 
+     * @param loopControllers for thread group
+     * @param nThreads Number of threads.
+     * @param rampUp Ramp up time in seconds.
+     * @param duration in seconds
+     * @return Configured thread group for ramp up test
+     */
+    public SetupThreadGroup createLoad(LoopController loopController, int nThreads, int rampUp, int duration) {
         // TODO implement
-        SetupThreadGroup threadGroup = new SetupThreadGroup();
+        SetupThreadGroup ret = new SetupThreadGroup();
         
-        threadGroup.setSamplerController(c);
+        ret.setRampUp(rampUp);
+        ret.setDuration(duration);
+        ret.setSamplerController(loopController);
+        
+        return ret;
     }
+    
+    // May want a separate method for setting up spike tests?
     
     /**
      * 
