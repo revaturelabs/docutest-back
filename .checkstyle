@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <fileset-config file-format-version="1.2.0" simple-config="false" sync-formatter="false">
-  <local-check-config name="maven-checkstyle-plugin validate" location="file:/C:/Users/Zach/Desktop/Revature/Project%203/docutest-back/rev_checks.xml" type="remote" description="maven-checkstyle-plugin configuration validate">
-    <property name="checkstyle.header.file" value="C:\Users\Zach\Documents\workspace-spring-tool-suite-4-4.8.0.RELEASE\.metadata\.plugins\org.eclipse.core.resources\.projects\docutest\com.basistech.m2e.code.quality.checkstyleConfigurator\checkstyle-header-validate.txt"/>
+  <local-check-config name="maven-checkstyle-plugin validate" location="file:/C:/Users/julie/Documents/Docutest-Back/rev_checks.xml" type="remote" description="maven-checkstyle-plugin configuration validate">
+    <property name="checkstyle.header.file" value="C:\Users\julie\Documents\200810jwa-spring\.metadata\.plugins\org.eclipse.core.resources\.projects\Docutest-Back\com.basistech.m2e.code.quality.checkstyleConfigurator\checkstyle-header-validate.txt"/>
     <property name="checkstyle.cache.file" value="${project_loc}/target/checkstyle-cachefile"/>
   </local-check-config>
   <fileset name="java-sources-validate" enabled="true" check-config-name="maven-checkstyle-plugin validate" local="true">
