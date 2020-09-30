@@ -24,7 +24,7 @@ public class JMeterServices {
     // TODO REMOVE TEMP
     public static final int TEMP_DURATION = 10;
     
-    private HashTree hashTree;
+    private HashTree hashTree = new HashTree();
 
     public void loadTesting(Swagger swag, LoadTestConfig ltg) {
         StandardJMeterEngine jm = new StandardJMeterEngine();
@@ -70,8 +70,10 @@ public class JMeterServices {
      */
     public Set<HTTPSampler> createHTTPSampler(Swagger input) {
         // TODO test
-
         Set<HTTPSampler> httpSamplers = new HashSet<>();
+        if (input == null) {
+            return httpSamplers;
+        }
         String host = input.getHost();
 
         // trim, remove "
