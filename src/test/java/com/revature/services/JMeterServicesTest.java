@@ -15,7 +15,6 @@ class JMeterServicesTest {
     
     private JMeterServices jm;
     private LoadTestConfig loadConfig = new LoadTestConfig();
-    private TestUtil td = new TestUtil();
 
     @BeforeAll
     static void setUpBeforeClass() throws Exception {
@@ -32,6 +31,7 @@ class JMeterServicesTest {
         loadConfig.threads = 20;
         
         jm = new JMeterServices();
+        TestUtil.initFields();
     }
 
     @AfterEach
@@ -40,7 +40,7 @@ class JMeterServicesTest {
 
     @Test
     void testTemp() {
-        jm.loadTesting(td.swag1, loadConfig);
+        jm.loadTesting(TestUtil.swag1, loadConfig);
     }
 
 }
