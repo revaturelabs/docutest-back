@@ -12,6 +12,7 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Response;
 import io.swagger.models.Swagger;
+import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
@@ -48,17 +49,14 @@ public class SwaggerfileController {
         JsonNode node = mapper.readTree(jsonStream);
         
         Swagger swag = new SwaggerParser().read(node);
-       
+        
+        swag.getDefinitions();
         System.out.println(swag.getInfo().getDescription());
         
         for (Map.Entry<String, Path> entry : swag.getPaths().entrySet()) {
             System.out.println(entry.getKey());
             printOperations(swag, entry.getValue().getOperationMap());
         }
-//        for (Map.Entry<String, Model> entry : swag.getDefinitions().entrySet()) {
-//            System.out.println(entry.getKey());
-//            System.out.println(entry.getValue());
-//        }
         
         return ResponseEntity.ok().build();
     }
@@ -69,34 +67,18 @@ public class SwaggerfileController {
             System.out.println("Parameters: ");
             for (Parameter p : op.getValue().getParameters()) {
                 System.out.println(p.getName() + ", ");
+                
+                if (p instanceof BodyParameter) {
+                    BodyParameter bp = (BodyParameter) p;
+                    Model schema = bp.getSchema();
+                    Map<String, Property> map = schema.getProperties();
+                    
+                    
+                    System.out.println(schema.getReference());
+                }
+                
             }
             System.out.println();
-            printResponses(swag, op.getValue().getResponses());
-        }
-    }
-    
-    private static void printResponses(Swagger swag, Map<String, Response> responseMap) {
-        System.out.println("Responses:");
-        for (Map.Entry<String, Response> response : responseMap.entrySet()) {
-            System.out.println(response.getKey() + " : " + response.getValue().getDescription());
-            
-            if (response.getValue().getSchema() instanceof ArrayProperty) {
-                ArrayProperty ap = (ArrayProperty) response.getValue().getSchema();
-                if (ap.getItems() instanceof RefProperty) {
-                    RefProperty rp = (RefProperty) ap.getItems();
-                    printReference(swag, rp);
-                }
-            }
-        }
-    }
-    
-    private static void printReference(Swagger swag, RefProperty rp) {
-        if (rp.getRefFormat().equals(RefFormat.INTERNAL) &&  
-                swag.getDefinitions().containsKey(rp.getSimpleRef())) {
-            Model m = swag.getDefinitions().get(rp.getSimpleRef());
-            for (Map.Entry<String, Property> propertyEntry : m.getProperties().entrySet()) {
-                System.out.println(" " + propertyEntry.getKey() + " : " + propertyEntry.getValue().getType());
-            }
         }
     }
     
