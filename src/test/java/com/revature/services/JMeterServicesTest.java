@@ -2,6 +2,9 @@ package com.revature.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Set;
+
+import org.apache.jmeter.protocol.http.sampler.HTTPSampler;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,7 +43,20 @@ class JMeterServicesTest {
 
     @Test
     void testTemp() {
-        jm.loadTesting(TestUtil.swag1, loadConfig);
+        jm.loadTesting(TestUtil.todos, loadConfig);
+    }
+    
+    @Test
+    void testHttpSampler() {
+        Set<HTTPSampler> samplers = jm.createHTTPSampler(TestUtil.get);
+        assertTrue(1 == samplers.size());
+        samplers = jm.createHTTPSampler(TestUtil.todos);
+        assertTrue(7 == samplers.size());
+    }
+    
+    @Test
+    void testHttpSamplerNull() {
+        assertTrue(0 == jm.createHTTPSampler(null).size());
     }
 
 }
