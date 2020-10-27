@@ -1,0 +1,56 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Simple POST to blazedemo",
+        "version": "1.0",
+        "title": "Get Example",
+        "contact": {}
+    },
+
+    "host": "google.com:80",
+    "basePath": "/",
+    "tags": [],
+    "paths": {
+        "/": {
+            "post": {
+                "consumes" : [
+                    "application/json"
+                ],
+                "parameters" : [
+                    {
+                        "in" : "body",
+                        "name" : "body",
+                        "required" : true,
+                        "schema" : {
+                            "$ref" : "#/definitions/Obj"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "status code 200"
+                    }
+                }
+            }
+        }
+    },
+    "definitions" :{
+        "Obj" : {
+            "properties" : {
+                "id" : {
+                    "type" : "integer"
+                },
+                "field1" : {
+                    "type" : "string"
+                },
+                "field2" : {
+                	"type" : "array",
+                	"items": {
+              			"type": "integer",
+              			"format": "int32"
+              		}
+                }
+            }
+        }
+    }
+}
